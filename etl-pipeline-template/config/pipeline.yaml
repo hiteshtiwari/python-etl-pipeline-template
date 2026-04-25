@@ -1,0 +1,81 @@
+# ============================================================
+# Example Pipeline Config: API → Transform → S3
+# ============================================================
+# Copy this file, rename it, and fill in your values.
+# Run with: python -m etl.pipeline --config config/my_pipeline.yaml
+# ============================================================
+
+name: "Orders API to S3 Pipeline"
+
+# ── EXTRACT ─────────────────────────────────────────────────
+extractor:
+  type: api                      # api | s3 | postgres
+  name: orders_api
+  url: https://api.example.com/orders
+  headers:
+    Authorization: "Bearer YOUR_API_TOKEN_HERE"
+  params:
+    page_size: 100
+    status: completed
+  pagination:
+    enabled: true
+    page_param: page
+    max_pages: 50
+  max_retries: 3
+  retry_delay_seconds: 2
+
+# ── TRANSFORM ───────────────────────────────────────────────
+transformer:
+  steps:
+    - type: rename_columns
+      mapping:
+        cust_id: customer_id
+        amt: amount
+        ts: created_at
+
+    - type: cast_types
+      columns:
+        amount: float
+        created_at: datetime
+        is_active: bool
+
+    - type: drop_duplicates
+      subset: [customer_id, created_at]
+
+    - type: drop_nulls
+      columns: [customer_id, amount]
+
+    - type: filter_rows
+      column: amount
+      operator: ">"
+      value: 0
+
+    - type: add_column
+      name: ingested_at
+      value: now
+
+# ── QUALITY CHECKS ──────────────────────────────────────────
+quality_checks:
+  min_row_count: 10
+  expected_columns: [customer_id, amount, created_at, ingested_at]
+  max_null_pct:
+    customer_id: 0.0     # No nulls allowed
+    amount: 0.02         # Max 2% nulls
+  value_ranges:
+    amount:
+      min: 0
+      max: 1000000
+
+# ── LOAD ────────────────────────────────────────────────────
+loader:
+  type: s3                       # s3 | postgres
+  bucket: my-processed-data-bucket
+  prefix: processed/orders/
+  file_format: parquet
+  partition_by: created_at
+  mode: overwrite
+
+# ── ALERTING ────────────────────────────────────────────────
+alerting:
+  slack_webhook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+  pipeline_name: "Orders API to S3"
