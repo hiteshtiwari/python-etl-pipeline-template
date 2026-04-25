@@ -4,6 +4,7 @@ Senior Data Engineer | Python · Spark · Azure/AWS · SQL · Data Architecture
 I build robust, scalable data systems that turn raw data into reliable insights. With 10+ years of hands-on experience, I specialize in designing end-to-end data pipelines, cloud-native architectures, and high-performance Spark workloads.
 
 Featured Projects
+
 🔹 Automated ETL Pipeline
 
 End-to-end data pipeline using Python + Airflow + AWS S3. Handles ingestion, transformation, and loading with full error handling and alerting.
