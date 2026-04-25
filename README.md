@@ -32,11 +32,11 @@ Highlights: 40% faster than naive implementations, plug-and-play design
 
 
 What I Can Build:
-Service                                 	Description                          Turnaround 
-ETL Pipeline			Custom Python pipeline from source to destination    3–5 days
-Cloud Data Lake			Full Azure/AWS data lake setup with Terraform        5–7 days
-Data Architecture Review	Audit your current setup + recommendations report    2–3 days
-Spark Optimization		Speed up your existing Spark jobs		     2–4 days
+Service                                 	Description                             Turnaround 
+ETL Pipeline			           Custom Python pipeline from source to destination    3–5 days
+Cloud Data Lake			         Full Azure/AWS data lake setup with Terraform        5–7 days
+Data Architecture Review	   Audit your current setup + recommendations report    2–3 days
+Spark Optimization		       Speed up your existing Spark jobs		                2–4 days
 
 
 Available for freelance projects — reach out via email: hiteshtiwari1990@gmail.com
